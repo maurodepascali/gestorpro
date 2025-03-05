@@ -1,0 +1,125 @@
+/* Estilos generales para el componente */
+.ventas-container {
+  padding: 20px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* Estilo para el formulario de registro */
+.formulario-venta {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.formulario-venta select,
+.formulario-venta input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+.formulario-venta select:focus,
+.formulario-venta input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.formulario-venta button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.formulario-venta button:hover {
+  background-color: #45a049;
+}
+
+/* Estilo para la tabla de historial de ventas */
+.historial-ventas {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.historial-ventas table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.historial-ventas th, .historial-ventas td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.historial-ventas th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+.historial-ventas tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Estilo de los botones */
+.btn {
+  padding: 6px 12px; /* Reduce el padding */
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px; /* Tamaño de fuente más pequeño */
+  width: auto; /* Asegura que el botón tenga solo el tamaño necesario para el contenido */
+  height: 30px; /* Ajusta la altura si es necesario */
+}
+
+.btn-edit, .btn-delete {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+}
+
+.btn-edit {
+  background-color: #4CAF50;
+}
+
+.btn-edit:hover {
+  background-color: #45a049;
+}
+
+.btn-delete {
+  background-color: #f44336;
+}
+
+.btn-delete:hover {
+  background-color: #d32f2f;
+}
