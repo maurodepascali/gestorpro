@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/gestorpro/static/css/main.bf287b28.css",
-    "main.js": "/gestorpro/static/js/main.7255f024.js",
+    "main.css": "/gestorpro/static/css/main.4020d297.css",
+    "main.js": "/gestorpro/static/js/main.7afac8c6.js",
     "static/js/453.aa1d570d.chunk.js": "/gestorpro/static/js/453.aa1d570d.chunk.js",
     "index.html": "/gestorpro/index.html",
-    "main.bf287b28.css.map": "/gestorpro/static/css/main.bf287b28.css.map",
-    "main.7255f024.js.map": "/gestorpro/static/js/main.7255f024.js.map",
+    "main.4020d297.css.map": "/gestorpro/static/css/main.4020d297.css.map",
+    "main.7afac8c6.js.map": "/gestorpro/static/js/main.7afac8c6.js.map",
     "453.aa1d570d.chunk.js.map": "/gestorpro/static/js/453.aa1d570d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.bf287b28.css",
-    "static/js/main.7255f024.js"
+    "static/css/main.4020d297.css",
+    "static/js/main.7afac8c6.js"
   ]
 }
