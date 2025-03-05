@@ -25,6 +25,8 @@ import {
 import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc, getDoc, query, orderBy } from 'firebase/firestore';
 import { db } from './firebase';
 import { safeFormat, safeFormatDate } from './firebaseDataHelper';
+import { useMediaQuery } from 'react-responsive';
+
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -45,6 +47,9 @@ const VentasComponent = () => {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+
+  
   // Cargar productos y ventas
   const cargarDatos = async () => {
     setLoading(true);
@@ -300,10 +305,15 @@ const eliminarVenta = async (ventaId) => {
     <div style={{ padding: '20px' }}>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
         <Card>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <div style={{ display: 'flex', 
+    flexDirection: isMobile ? 'column' : 'row', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    textAlign: 'center', 
+    marginBottom: 20   }}>
             <Space align="center">
               <ShoppingCartOutlined style={{ fontSize: 24, color: '#1890ff' }} />
-              <Title level={4} style={{ margin: 0 }}>
+              <Title level={isMobile ? 5 : 4} style={{ margin: 0 }}>
                 Gestión de Ventas
               </Title>
             </Space>
@@ -316,6 +326,7 @@ const eliminarVenta = async (ventaId) => {
                 form.resetFields();
                 setModalVisible(true);
               }}
+              style={{ marginTop: isMobile ? 10 : 0, fontSize: isMobile ? 12 : 14 }}
             >
               Nueva Venta
             </Button>
@@ -323,15 +334,18 @@ const eliminarVenta = async (ventaId) => {
 
           <Divider style={{ margin: '0 0 20px 0' }} />
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-            <Text>
-              Total de {ventas.length} ventas registradas
-            </Text>
+          <div style={{ display: 'flex', 
+    flexDirection: 'column', 
+    alignItems: 'center', 
+    textAlign: 'center', 
+    marginBottom: 20   }}>
+            <Text style={{ fontSize: isMobile ? 12 : 14 }}>Total de {ventas.length} ventas registradas</Text>
             
-            <Space>
+            <Space style={{ marginTop: 10, flexDirection: isMobile ? 'column' : 'row' }}>
               <Button 
                 icon={<SyncOutlined />} 
                 onClick={cargarDatos}
+                style={{ fontSize: isMobile ? 12 : 14 }}
               >
                 Actualizar
               </Button>
@@ -340,7 +354,7 @@ const eliminarVenta = async (ventaId) => {
                 value={totalVentas} 
                 precision={2} 
                 prefix="$" 
-                style={{ marginLeft: 20 }}
+                style={{ marginLeft: isMobile ? 0 : 20 }}
               />
             </Space>
           </div>
@@ -351,6 +365,7 @@ const eliminarVenta = async (ventaId) => {
             rowKey="id"
             pagination={{ pageSize: 10 }}
             loading={loading}
+            scroll={{ x: "max-content" }} 
           />
         </Card>
       </Space>
@@ -364,11 +379,13 @@ const eliminarVenta = async (ventaId) => {
           setVentaEditada(null);
         }}
         footer={null}
+        width={window.innerWidth < 600 ? "90%" : 520}
       >
         <Form
           form={form}
           layout="vertical"
           onFinish={onFinish}
+          style={{ width: "100%" }} 
         >
           <Form.Item
             name="productoId"

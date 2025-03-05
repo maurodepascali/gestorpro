@@ -1,52 +1,98 @@
-.reportes-container {
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.cards-container {
+/* Estilos para el encabezado del reporte */
+.reporte-header {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
-.card {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: calc(25% - 20px);
-  box-sizing: border-box;
+.reporte-title {
+  margin-bottom: 16px;
+  text-align: center;
+  display: flex;
+  align-items: center;
 }
 
-.card-title {
-  font-size: 18px;
-  font-weight: 600;
+/* Contenedor del calendario */
+.calendar-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.calendar-wrapper {
+  width: 100%;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Selector de fechas */
+.date-range-picker {
+  width: 100% !important;
   margin-bottom: 10px;
-  color: #333;
 }
 
-.card-value {
-  font-size: 22px;
-  font-weight: bold;
+/* Contenedor de botones */
+.action-buttons {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+  justify-content: space-between;
 }
 
-.card-value.green {
-  color: #4CAF50;
+.action-button {
+  flex: 1;
 }
 
-.card-value.red {
-  color: #F44336;
+/* Forzar flechas visibles en el calendario */
+.ant-picker-header-super-prev-btn,
+.ant-picker-header-prev-btn,
+.ant-picker-header-next-btn,
+.ant-picker-header-super-next-btn {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  pointer-events: auto !important;
 }
 
-.card-value.blue {
-  color: #2196F3;
+/* Centrar el calendario */
+.ant-picker-dropdown {
+  position: fixed !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 1050 !important;
+}
+
+/* Ajustes para móvil */
+@media (max-width: 768px) {
+  /* Ajustar los botones en columna para móvil */
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  /* Forzar a mostrar solo un panel */
+  .ant-picker-panels {
+    flex-direction: column !important;
+  }
+  
+  /* Ocultar el segundo panel en móvil */
+  .ant-picker-panel + .ant-picker-panel {
+    display: none !important;
+  }
+  
+  /* Ajustar el ancho del calendario */
+  .ant-picker-dropdown {
+    width: 280px !important;
+  }
+  
+  /* Ajustar el tamaño de los botones */
+  .action-button {
+    margin-bottom: 8px;
+    width: 100%;
+  }
 }

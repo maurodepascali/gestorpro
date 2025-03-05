@@ -34,6 +34,7 @@ import {
   orderBy
 } from 'firebase/firestore';
 import { db } from './firebase';
+import { useMediaQuery } from 'react-responsive';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -44,6 +45,8 @@ const MaterialesComponent = () => {
   const [form] = Form.useForm();
   const [modalVisible, setModalVisible] = useState(false);
   const [materialEditando, setMaterialEditando] = useState(null);
+
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   const unidades = ['Kilogramos', 'Gramos', 'Unidades', 'Litros', 'Metros', 'Centímetros', 'Mililitros', 'Paquetes'];
 
@@ -213,10 +216,15 @@ const MaterialesComponent = () => {
     <div style={{ padding: '20px' }}>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
         <Card>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <div style={{ display: 'flex', 
+    flexDirection: isMobile ? 'column' : 'row', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    textAlign: 'center', 
+    marginBottom: 20 }}>
             <Space align="center">
               <ToolOutlined style={{ fontSize: 24, color: '#1890ff' }} />
-              <Title level={4} style={{ margin: 0 }}>
+              <Title level={isMobile ? 5 : 4} style={{ margin: 0 }}>
                 Gestión de Materiales
               </Title>
             </Space>
@@ -229,6 +237,7 @@ const MaterialesComponent = () => {
                 form.resetFields();
                 setModalVisible(true);
               }}
+              style={{ marginTop: isMobile ? 10 : 0, fontSize: isMobile ? 12 : 14 }}
             >
               Nuevo Material
             </Button>
@@ -236,15 +245,20 @@ const MaterialesComponent = () => {
 
           <Divider style={{ margin: '0 0 20px 0' }} />
           
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-            <Text>
+          <div style={{ display: 'flex', 
+    flexDirection: 'column', 
+    alignItems: 'center', 
+    textAlign: 'center', 
+    marginBottom: 20}}>
+            <Text style={{ fontSize: isMobile ? 12 : 14 }}>
               Total de {materiales.length} materiales registrados
             </Text>
             
-            <Space>
+            <Space style={{ marginTop: 10, flexDirection: isMobile ? 'column' : 'row' }}>
               <Button 
                 icon={<SyncOutlined />} 
                 onClick={cargarMateriales}
+                style={{ fontSize: isMobile ? 12 : 14 }}
               >
                 Actualizar
               </Button>
@@ -253,7 +267,7 @@ const MaterialesComponent = () => {
                 value={totalGastosMateriales} 
                 precision={2} 
                 prefix="$" 
-                style={{ marginLeft: 20 }}
+                style={{ marginLeft: isMobile ? 0 : 20 }}
               />
             </Space>
           </div>
@@ -264,6 +278,7 @@ const MaterialesComponent = () => {
             rowKey="id"
             pagination={{ pageSize: 10 }}
             loading={loading}
+            scroll={{ x: "max-content" }} 
           />
         </Card>
       </Space>

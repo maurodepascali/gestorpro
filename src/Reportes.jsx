@@ -32,6 +32,10 @@ import { safeFormat } from './firebaseDataHelper';
 import { calcularTotalVentas } from './Ventas';
 import { utils, writeFile } from 'xlsx'; 
 import locale from 'antd/es/date-picker/locale/es_ES';
+import { useMediaQuery } from 'react-responsive';
+import moment from 'moment';
+import 'moment/locale/es';
+import './reportes.css'; // Asegúrate de crear este archivo CSS
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
@@ -144,6 +148,8 @@ const ReportesComponent = () => {
   const [fechaInicio, setFechaInicio] = useState(null);
   const [fechaFin, setFechaFin] = useState(null);
   
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+
   // Cargar datos de ventas y materiales
   const cargarDatos = async (inicio = null, fin = null) => {
     setLoading(true);
@@ -215,6 +221,16 @@ const ReportesComponent = () => {
   useEffect(() => {
     cargarDatos();
   }, []);
+
+  // Si estamos en móvil, usamos un formato de fecha más compacto
+  useEffect(() => {
+    if (isMobile) {
+      // Configurar formato corto de fecha para dispositivos móviles
+      moment.updateLocale('es', {
+        monthsShort: 'Ene_Feb_Mar_Abr_May_Jun_Jul_Ago_Sep_Oct_Nov_Dic'.split('_')
+      });
+    }
+  }, [isMobile]);
 
   // Calcular métricas financieras
   const totalVentas = calcularTotalVentas(ventas);
@@ -389,42 +405,65 @@ const ReportesComponent = () => {
     }
   ];
 
+  
   return (
     <ConfigProvider locale={locale}>
       <div style={{ padding: '20px' }}>
         <Spin spinning={loading} tip="Cargando datos...">
           <Space direction="vertical" size="large" style={{ width: '100%' }}>
             <Card>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                <Space align="center">
-                  <BarChartOutlined style={{ fontSize: 24, color: '#1890ff' }} />
-                  <Title level={4} style={{ margin: 0 }}>
-                    Reportes Financieros
-                  </Title>
-                </Space>
-                
-                <Space>
-                  <RangePicker 
-                    onChange={handleFechasChange}
-                    format="DD/MM/YYYY"
-                    locale={locale}
-                    placeholder={['Fecha inicio', 'Fecha fin']}
-                  />
-                  <Button 
-                    icon={<SyncOutlined />} 
-                    onClick={() => cargarDatos(fechaInicio, fechaFin)}
-                  >
-                    Actualizar
-                  </Button>
-                  <Button 
-                    type="primary" 
-                    icon={<ExportOutlined />} 
-                    onClick={exportarReporte}
-                  >
-                    Exportar Excel
-                  </Button>
-                </Space>
-              </div>
+<div className="reporte-header">
+  <div className="reporte-title">
+    <BarChartOutlined style={{ fontSize: 24, color: '#1890ff' }} />
+    <Title level={isMobile ? 5 : 4} style={{ margin: 0, marginLeft: 8 }}>
+      Reportes Financieros
+    </Title>
+  </div>
+  
+  <div className="calendar-container">
+    <div className="calendar-wrapper">
+      <ConfigProvider 
+        getPopupContainer={triggerNode => triggerNode.parentNode}
+        theme={{
+          components: {
+            DatePicker: {
+              cellWidth: 36,
+              cellHeight: 30
+            }
+          }
+        }}
+      >
+        <DatePicker.RangePicker 
+          onChange={handleFechasChange}
+          format={isMobile ? "DD/MM/YY" : "DD/MM/YYYY"}
+          locale={locale}
+          placeholder={isMobile ? ['Inicio', 'Fin'] : ['Fecha inicio', 'Fecha fin']}
+          className="date-range-picker"
+          dropdownClassName="calendar-dropdown"
+          inputReadOnly={true}
+        />
+      </ConfigProvider>
+      
+      <div className="action-buttons">
+        <Button 
+          icon={<SyncOutlined />} 
+          onClick={() => cargarDatos(fechaInicio, fechaFin)}
+          className="action-button"
+        >
+          Actualizar
+        </Button>
+        <Button 
+          type="primary" 
+          icon={<ExportOutlined />} 
+          onClick={exportarReporte}
+          className="action-button"
+        >
+          Exportar
+        </Button>
+      </div>
+    </div>
+  </div>
+</div>
 
               <Divider style={{ margin: '0 0 24px 0' }} />
 
@@ -433,11 +472,11 @@ const ReportesComponent = () => {
                 <Col xs={24} sm={12} md={6}>
                   <Card>
                     <Statistic
-                      title="Total de Ventas"
+                      title={<div style={{ textAlign: 'center' }}>Total de Ventas</div>}
                       value={totalVentas}
                       precision={2}
                       prefix={<DollarOutlined />}
-                      valueStyle={{ color: '#3f8600' }}
+                      valueStyle={{ color: '#3f8600', fontSize: isMobile ? '20px' : '24px', textAlign:'center' }}
                       suffix="$"
                     />
                   </Card>
@@ -445,11 +484,11 @@ const ReportesComponent = () => {
                 <Col xs={24} sm={12} md={6}>
                   <Card>
                     <Statistic
-                      title="Gastos en Materiales"
+                      title={<div style={{ textAlign: 'center' }}>Gastos en Materiales</div>}
                       value={totalGastosMateriales}
                       precision={2}
                       prefix={<ToolOutlined />}
-                      valueStyle={{ color: '#cf1322' }}
+                      valueStyle={{ color: '#cf1322', fontSize: isMobile ? '20px' : '24px', textAlign:'center' }}
                       suffix="$"
                     />
                   </Card>
@@ -457,11 +496,11 @@ const ReportesComponent = () => {
                 <Col xs={24} sm={12} md={6}>
                   <Card>
                     <Statistic
-                      title="Ganancias Netas"
+                      title={<div style={{ textAlign: 'center' }}>Ganancias Netas</div>}
                       value={ganancias}
                       precision={2}
                       prefix={ganancias >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-                      valueStyle={{ color: ganancias >= 0 ? '#3f8600' : '#cf1322' }}
+                      valueStyle={{ color: ganancias >= 0 ? '#3f8600' : '#cf1322', fontSize: isMobile ? '20px' : '24px', textAlign:'center' }}
                       suffix="$"
                     />
                   </Card>
@@ -469,10 +508,10 @@ const ReportesComponent = () => {
                 <Col xs={24} sm={12} md={6}>
                   <Card>
                     <Statistic
-                      title="Margen de Ganancia"
+                      title={<div style={{ textAlign: 'center' }}>Margen de Ganancia</div>}
                       value={margenGanancia}
                       precision={2}
-                      valueStyle={{ color: margenGanancia >= 30 ? '#3f8600' : margenGanancia >= 15 ? '#faad14' : '#cf1322' }}
+                      valueStyle={{ color: margenGanancia >= 30 ? '#3f8600' : margenGanancia >= 15 ? '#faad14' : '#cf1322', fontSize: isMobile ? '20px' : '24px', textAlign:'center' }}
                       suffix="%"
                       prefix={<LineChartOutlined />}
                     />
@@ -492,6 +531,7 @@ const ReportesComponent = () => {
                 dataSource={gananciasPorMes} 
                 rowKey="mes"
                 pagination={false}
+                scroll={{ x: "max-content" }} 
               />
 
               <Divider orientation="left" style={{ margin: '24px 0 16px 0' }}>
@@ -508,6 +548,7 @@ const ReportesComponent = () => {
                 rowKey="id"
                 size="small"
                 footer={() => <Text type="secondary">Mostrando las 5 ventas más recientes</Text>}
+                scroll={{ x: "max-content" }} 
               />
             </Card>
           </Space>

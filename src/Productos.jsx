@@ -208,47 +208,52 @@ const ProductosComponent = () => {
       </Space>
 
       <Table 
-        columns={columns} 
-        dataSource={productos} 
-        rowKey="id"
-        pagination={{ pageSize: 10 }}
-      />
+  columns={columns} 
+  dataSource={productos} 
+  rowKey="id"
+  pagination={{ pageSize: 10 }}
+  scroll={{ x: "max-content" }} // Permite desplazamiento horizontal en pantallas pequeñas
+/>
 
-      <Modal
-        title={productoActual ? "Editar Producto" : "Nuevo Producto"}
-        open={modalVisible}
-        onCancel={() => {
-          setModalVisible(false);
-          setProductoActual(null);
-        }}
-        footer={null}
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleAgregar}
-        >
-          <Form.Item
-            name="nombre"
-            label="Nombre"
-            rules={[{ required: true, message: 'Nombre obligatorio' }]}
-          >
-            <Input placeholder="Nombre del producto" />
-          </Form.Item>
-          <Form.Item
-            name="cantidad"
-            label="Cantidad"
-            rules={[{ required: true, message: 'Cantidad obligatoria' }]}
-          >
-            <Input type="number" placeholder="Stock" />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              {productoActual ? 'Actualizar' : 'Crear'}
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+<Modal
+  title={productoActual ? "Editar Producto" : "Nuevo Producto"}
+  open={modalVisible}
+  onCancel={() => {
+    setModalVisible(false);
+    setProductoActual(null);
+  }}
+  footer={null}
+  width={window.innerWidth < 600 ? "90%" : 520} // Ajusta el ancho del modal en móviles
+>
+  <Form
+    form={form}
+    layout="vertical"
+    onFinish={handleAgregar}
+    style={{ width: "100%" }} // Hace que el formulario ocupe todo el ancho
+  >
+    <Form.Item
+      name="nombre"
+      label="Nombre"
+      rules={[{ required: true, message: 'Nombre obligatorio' }]}
+    >
+      <Input placeholder="Nombre del producto" size="large" />
+    </Form.Item>
+    <Form.Item
+      name="cantidad"
+      label="Cantidad"
+      rules={[{ required: true, message: 'Cantidad obligatoria' }]}
+    >
+      <Input type="number" placeholder="Stock" size="large" />
+    </Form.Item>
+    <Form.Item>
+      <Button type="primary" htmlType="submit" block size="large">
+        {productoActual ? 'Actualizar' : 'Crear'}
+      </Button>
+    </Form.Item>
+  </Form>
+</Modal>
+
+
     </div>
   );
 };
