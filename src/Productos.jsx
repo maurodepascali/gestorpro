@@ -4,6 +4,7 @@ import {
   Button, 
   Modal, 
   Form, 
+  Card,
   Input, 
   message, 
   Popconfirm,
@@ -16,7 +17,9 @@ import {
   PlusOutlined, 
   EditOutlined, 
   DeleteOutlined, 
-  HistoryOutlined
+  HistoryOutlined,
+  ProductOutlined,
+  ShoppingCartOutlined
 } from '@ant-design/icons';
 import { 
   collection, 
@@ -30,7 +33,9 @@ import {
 } from 'firebase/firestore';
 import { db } from './firebase';
 
-const { Text } = Typography;
+import { useMediaQuery } from 'react-responsive';
+
+const { Title,Text } = Typography;
 
 // Función segura para convertir Firestore timestamp a Date
 const toDate = (timestamp) => {
@@ -66,6 +71,8 @@ const ProductosComponent = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [productoActual, setProductoActual] = useState(null);
   const [form] = Form.useForm();
+
+  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   useEffect(() => {
     const productosRef = collection(db, 'productos');
@@ -133,7 +140,7 @@ const ProductosComponent = () => {
       title: 'Nombre',
       dataIndex: 'nombre',
       key: 'nombre',
-      render: (text) => <Text strong>{text}</Text>
+      sorter: (a, b) => a.nombre.localeCompare(b.nombre)
     },
     {
       title: 'Stock',
@@ -143,26 +150,38 @@ const ProductosComponent = () => {
         <Tag color={cantidad < 10 ? 'red' : 'green'}>
           {cantidad}
         </Tag>
-      )
+      ),
+      sorter: (a, b) => a.cantidad - b.cantidad, // Ordena numéricamente
+      defaultSortOrder: 'descend'
     },
     {
       title: 'Fecha Creación',
       dataIndex: 'fechaAgregado',
       key: 'fechaAgregado',
-      render: (fecha) => formatearFecha(fecha)
+      render: (fechaAgregado) => (
+        <span>{fechaAgregado.toLocaleDateString('es-ES', { 
+          day: '2-digit', 
+          month: '2-digit', 
+          year: 'numeric',
+        })}</span>
+      ),
+      sorter: (a, b) => new Date(b.fechaAgregado) - new Date(a.fechaAgregado),
+      defaultSortOrder: 'descend'
     },
     {
       title: 'Última Actualización',
       dataIndex: 'fechaActualizacion',
       key: 'fechaActualizacion',
-      render: (fecha) => (
-        <Tooltip title={toDate(fecha).toLocaleString('es-ES')}>
+      render: (fecfechaActualizacionha) => (
+        <Tooltip title={toDate(fecfechaActualizacionha).toLocaleString('es-ES')}>
           <Space>
             <HistoryOutlined />
-            {formatearFecha(fecha)}
+            {formatearFecha(fecfechaActualizacionha)}
           </Space>
         </Tooltip>
-      )
+      ),
+      sorter: (a, b) => new Date(b.fechaActualizacion) - new Date(a.fechaActualizacion),
+      defaultSortOrder: 'descend'
     },
     {
       title: 'Acciones',
@@ -192,9 +211,23 @@ const ProductosComponent = () => {
   ];
 
   return (
-    <div style={{ padding: 24 }}>
-      <Space style={{ marginBottom: 16 }}>
-        <Button 
+    <div style={{ padding: '20px' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Card>
+      <div style={{ display: 'flex', 
+    flexDirection: isMobile ? 'column' : 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    textAlign: 'center', 
+    marginBottom: 20   }}>
+            <Space align="center">
+              <ProductOutlined style={{ fontSize: 24, color: '#1890ff' }} />
+              <Title level={isMobile ? 5 : 4} style={{ margin: 0 }}>
+                Gestión de Productos
+              </Title>
+            </Space>
+            
+            <Button 
           type="primary" 
           icon={<PlusOutlined />}
           onClick={() => {
@@ -202,9 +235,12 @@ const ProductosComponent = () => {
             setProductoActual(null);
             form.resetFields();
           }}
+          style={{ marginTop: isMobile ? 10 : 0, fontSize: isMobile ? 12 : 14 }}
         >
           Nuevo Producto
         </Button>
+          </div>
+      </Card>  
       </Space>
 
       <Table 

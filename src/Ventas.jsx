@@ -257,9 +257,7 @@ const eliminarVenta = async (ventaId) => {
         <span>{fecha.toLocaleDateString('es-ES', { 
           day: '2-digit', 
           month: '2-digit', 
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
+          year: 'numeric'
         })}</span>
       ),
       sorter: (a, b) => new Date(b.fecha) - new Date(a.fecha),
@@ -307,7 +305,7 @@ const eliminarVenta = async (ventaId) => {
         <Card>
           <div style={{ display: 'flex', 
     flexDirection: isMobile ? 'column' : 'row', 
-    justifyContent: 'center', 
+    justifyContent: 'space-between', 
     alignItems: 'center', 
     textAlign: 'center', 
     marginBottom: 20   }}>
@@ -335,28 +333,14 @@ const eliminarVenta = async (ventaId) => {
           <Divider style={{ margin: '0 0 20px 0' }} />
 
           <div style={{ display: 'flex', 
-    flexDirection: 'column', 
+    flexDirection: isMobile ? 'column' : 'row', 
+    justifyContent: 'space-between',
     alignItems: 'center', 
     textAlign: 'center', 
     marginBottom: 20   }}>
-            <Text style={{ fontSize: isMobile ? 12 : 14 }}>Total de {ventas.length} ventas registradas</Text>
             
-            <Space style={{ marginTop: 10, flexDirection: isMobile ? 'column' : 'row' }}>
-              <Button 
-                icon={<SyncOutlined />} 
-                onClick={cargarDatos}
-                style={{ fontSize: isMobile ? 12 : 14 }}
-              >
-                Actualizar
-              </Button>
-              <Statistic 
-                title="Total Ventas" 
-                value={totalVentas} 
-                precision={2} 
-                prefix="$" 
-                style={{ marginLeft: isMobile ? 0 : 20 }}
-              />
-            </Space>
+            
+            
           </div>
           
           <Table 
@@ -366,6 +350,20 @@ const eliminarVenta = async (ventaId) => {
             pagination={{ pageSize: 10 }}
             loading={loading}
             scroll={{ x: "max-content" }} 
+            /*footer={() => (
+              <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: isMobile ? 'column' : 'row' }}>
+                <Text style={{ fontSize: isMobile ? 12 : 14, marginTop: isMobile ? '10px' : '50px', color: 'gray', textAlign: isMobile ? 'center' : 'left' }}>Total de {ventas.length} ventas</Text>
+                <Space style={{ marginTop: 10, flexDirection: isMobile ? 'column' : 'row', display: 'flex', alignItems: 'center', gap: 16 }}>
+              <Statistic 
+                title="Total Ventas" 
+                value={totalVentas} 
+                precision={2} 
+                prefix="$" 
+                style={{ marginLeft: isMobile ? 0 : 20, textAlign: 'center' }}
+              />
+            </Space>
+              </div>
+            )}*/
           />
         </Card>
       </Space>

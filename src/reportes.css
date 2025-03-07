@@ -72,7 +72,7 @@
 @media (max-width: 768px) {
   /* Ajustar los botones en columna para móvil */
   .action-buttons {
-    flex-direction: column;
+    
   }
   
   /* Forzar a mostrar solo un panel */

@@ -26,6 +26,10 @@ import {
   ArrowDownOutlined,
   ExportOutlined
 } from '@ant-design/icons';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  PieChart, Pie, Cell, LineChart, Line
+} from 'recharts';
 import { collection, getDocs, query, orderBy, where, Timestamp } from 'firebase/firestore';
 import { db } from './firebase';
 import { safeFormat } from './firebaseDataHelper';
@@ -49,6 +53,7 @@ const obtenerNombreMes = (fecha) => {
   return `${meses[fecha.getMonth()]} ${fecha.getFullYear()}`;
 };
 
+const COLORS = ['#0088FE', '#FF8042', '#00C49F', '#FFBB28'];
 // Función para agrupar ventas por mes
 const agruparVentasPorMes = (ventas) => {
   const ventasPorMes = {};
@@ -218,6 +223,128 @@ const ReportesComponent = () => {
     }
   };
 
+  const renderGraficos = () => {
+    // Verificar si tenemos datos para mostrar
+    if (gananciasPorMes.length === 0) {
+      return <div>No hay datos suficientes para mostrar gráficos</div>;
+    }
+
+    return (
+      <>
+        <Divider orientation="left" style={{ margin: '24px 0 16px 0' }}>
+          <Space>
+            <BarChartOutlined />
+            <span>Gráficos Financieros</span>
+          </Space>
+        </Divider>
+
+        <Row gutter={[16, 16]}>
+          {/* Gráfico de barras - Comparativa mensual */}
+          <Col xs={24} sm={24} md={12}>
+            <Card title={isMobile ? "Comparativa" : "Comparativa Mensual"}  bordered={false} style={{ fontSize: isMobile ? '12px' : '14px', textAlign: 'center' }}>
+              <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
+                <BarChart
+                  data={gananciasPorMes}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="nombreMes" 
+                    angle={-45} 
+                    textAnchor="end" 
+                    height={70}
+                  />
+                  <YAxis />
+                  <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+                  <Legend />
+                  <Bar dataKey="ventas" name="Ventas" fill="#0088FE" />
+                  <Bar dataKey="gastos" name="Gastos" fill="#FF8042" />
+                  <Bar dataKey="ganancia" name="Ganancia" fill="#00C49F" />
+                </BarChart>
+              </ResponsiveContainer>
+            </Card>
+          </Col>
+
+          {/* Gráfico circular - Distribución de ingresos vs gastos */}
+          <Col xs={24} sm={24} md={12}>
+            <Card title={isMobile ? "Distribución" : "Distribución Financiera"} bordered={false} style={{ fontSize: isMobile ? '12px' : '14px', textAlign: 'center' }}>
+              <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
+                <PieChart>
+                  <Pie
+                    data={[
+                      { name: 'Ingresos', value: totalVentas },
+                      { name: 'Gastos', value: totalGastosMateriales }
+                    ]}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {[
+                      { name: 'Ingresos', value: totalVentas },
+                      { name: 'Gastos', value: totalGastosMateriales }
+                    ].map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </Card>
+          </Col>
+
+          {/* Gráfico de línea - Tendencia de ganancias */}
+          <Col xs={24}>
+            <Card title={isMobile ? "Tendencia" : "Tendencia de Ganancias"} bordered={false} style={{ fontSize: isMobile ? '12px' : '14px', textAlign: 'center' }}> 
+              <ResponsiveContainer width="100%" height={isMobile ? 200 : 300}>
+                <LineChart
+                  data={gananciasPorMes}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="nombreMes" 
+                    angle={-45} 
+                    textAnchor="end" 
+                    height={70}
+                  />
+                  <YAxis />
+                  <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+                  <Legend />
+                  <Line 
+                    type="monotone" 
+                    dataKey="ganancia" 
+                    name="Ganancia" 
+                    stroke="#00C49F" 
+                    strokeWidth={2}
+                    activeDot={{ r: 8 }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="ventas" 
+                    name="Ventas" 
+                    stroke="#0088FE" 
+                    strokeWidth={2} 
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="gastos" 
+                    name="Gastos" 
+                    stroke="#FF8042" 
+                    strokeWidth={2} 
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </Card>
+          </Col>
+        </Row>
+      </>
+    );
+  };
   useEffect(() => {
     cargarDatos();
   }, []);
@@ -446,13 +573,6 @@ const ReportesComponent = () => {
       
       <div className="action-buttons">
         <Button 
-          icon={<SyncOutlined />} 
-          onClick={() => cargarDatos(fechaInicio, fechaFin)}
-          className="action-button"
-        >
-          Actualizar
-        </Button>
-        <Button 
           type="primary" 
           icon={<ExportOutlined />} 
           onClick={exportarReporte}
@@ -519,6 +639,8 @@ const ReportesComponent = () => {
                 </Col>
               </Row>
 
+              {/*{renderGraficos()}*/}
+
               <Divider orientation="left" style={{ margin: '24px 0 16px 0' }}>
                 <Space>
                   <BarChartOutlined />
@@ -547,7 +669,7 @@ const ReportesComponent = () => {
                 pagination={false}
                 rowKey="id"
                 size="small"
-                footer={() => <Text type="secondary">Mostrando las 5 ventas más recientes</Text>}
+                /*footer={() => <Text type="secondary">Mostrando las 5 ventas más recientes</Text>}*/
                 scroll={{ x: "max-content" }} 
               />
             </Card>

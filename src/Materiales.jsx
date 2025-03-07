@@ -218,7 +218,7 @@ const MaterialesComponent = () => {
         <Card>
           <div style={{ display: 'flex', 
     flexDirection: isMobile ? 'column' : 'row', 
-    justifyContent: 'center', 
+    justifyContent: 'space-between', 
     alignItems: 'center', 
     textAlign: 'center', 
     marginBottom: 20 }}>
@@ -250,26 +250,9 @@ const MaterialesComponent = () => {
     alignItems: 'center', 
     textAlign: 'center', 
     marginBottom: 20}}>
-            <Text style={{ fontSize: isMobile ? 12 : 14 }}>
-              Total de {materiales.length} materiales registrados
-            </Text>
             
-            <Space style={{ marginTop: 10, flexDirection: isMobile ? 'column' : 'row' }}>
-              <Button 
-                icon={<SyncOutlined />} 
-                onClick={cargarMateriales}
-                style={{ fontSize: isMobile ? 12 : 14 }}
-              >
-                Actualizar
-              </Button>
-              <Statistic 
-                title="Total Gastos" 
-                value={totalGastosMateriales} 
-                precision={2} 
-                prefix="$" 
-                style={{ marginLeft: isMobile ? 0 : 20 }}
-              />
-            </Space>
+            
+            
           </div>
           
           <Table 
@@ -279,6 +262,20 @@ const MaterialesComponent = () => {
             pagination={{ pageSize: 10 }}
             loading={loading}
             scroll={{ x: "max-content" }} 
+            /*footer={() => (
+              <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: isMobile ? 'column' : 'row' }}>
+                <Text style={{ fontSize: isMobile ? 12 : 14, marginTop: isMobile ? '10px' : '50px', color: 'gray', textAlign: isMobile ? 'center' : 'left' }}>Total de {materiales.length} materiales</Text>
+                <Space style={{ marginTop: 10, flexDirection: isMobile ? 'column' : 'row', display: 'flex', alignItems: 'center', gap: 16 }}>
+              <Statistic 
+                title="Total Gastos" 
+                value={totalGastosMateriales} 
+                precision={2} 
+                prefix="$" 
+                style={{ marginLeft: isMobile ? 0 : 20, textAlign: 'center' }}
+              />
+            </Space>
+              </div>
+            )}*/
           />
         </Card>
       </Space>
